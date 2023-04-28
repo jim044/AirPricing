@@ -4,9 +4,7 @@
 	   xsi:schemaLocation="http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-<int:channel id="errorLoggingChannel" />
-
-	<!-- Channels de log -->
+	<int:channel id="errorLoggingChannel" />
 	<int:logging-channel-adapter log-full-message="true" id="loggingChannel" logger-name="com.kode4you.airpricing.genericLoggingChannel" level="DEBUG" />
 
 </beans>

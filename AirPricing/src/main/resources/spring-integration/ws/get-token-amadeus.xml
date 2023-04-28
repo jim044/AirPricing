@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:int="http://www.springframework.org/schema/integration"
+	   xmlns:int-webflux="http://www.springframework.org/schema/integration/webflux"
+	   xsi:schemaLocation="http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/integration/webflux
+    	https://www.springframework.org/schema/integration/webflux/spring-integration-webflux.xsd">
+
+	<int:channel id="requestTokenAmadeusChannel"/>
+
+
+	<int-webflux:outbound-channel-adapter id="requestTokenAmadeus"
+										  url="http://localhost/example"
+										  http-method="GET"
+										  channel="requestTokenAmadeusChannel"
+										  charset="UTF-8"
+										  extract-payload="false"
+										  expected-response-type="java.lang.String"/>
+
+</beans>
