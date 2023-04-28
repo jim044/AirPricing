@@ -12,7 +12,7 @@
 
 
 	<int-webflux:outbound-channel-adapter id="requestTokenAmadeus"
-										  url="http://localhost/example"
+										  url-expression="'${api.amadeus.token-uri}'"
 										  http-method="GET"
 										  channel="requestTokenAmadeusChannel"
 										  charset="UTF-8"

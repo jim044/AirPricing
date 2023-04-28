@@ -13,7 +13,8 @@
 	<int-http:inbound-gateway
 			request-channel="enterPointChannel"
 			path="/test"
-			supported-methods="GET" />
+			supported-methods="GET"
+			reply-channel="requestTokenAmadeusChannel"/>
 
 
 
