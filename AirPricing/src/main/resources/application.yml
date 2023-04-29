@@ -14,14 +14,14 @@ spring:
           amadeus:
             token-uri: https://test.api.amadeus.com/v1/security/oauth2/token
 
-api:
-  amadeus:
-    base-url: test.api.amadeus.com/v2
-    endpoint-flight-offers: /shopping/flight-offers
 
 application:
   configuration:
     webflux-buffer-size: 16777216
+  amadeus:
+    base-path: test.api.amadeus.com/v2
+    endpoint-flight-offers: /shopping/flight-offers
+
 
 server:
   port: 8095

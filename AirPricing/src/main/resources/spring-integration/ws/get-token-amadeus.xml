@@ -14,14 +14,14 @@
 	<int:chain input-channel="requestTokenAmadeusChannel">
 
 		<int:header-enricher>
-			<int:header name="urlFlightSearch" expression="'${api.amadeus.base-url}' + '${api.amadeus.endpoint-flight-offers}'"/>
+			<int:header name="urlFlightSearch" expression="'${application.amadeus.endpoint-flight-offers}'"/>
 		</int:header-enricher>
 
 		<int:transformer ref="transformerTest"/>
 
 		<int-webflux:outbound-gateway id="requestTokenAmadeus"
 											  web-client="amadeusWebClient"
-											  url-expression="'${api.amadeus.base-url}' + '${api.amadeus.endpoint-flight-offers}'"
+											  url-expression="'${application.amadeus.endpoint-flight-offers}'"
 											  http-method="GET"
 											  charset="UTF-8"
 											  expected-response-type="java.lang.String"/>
