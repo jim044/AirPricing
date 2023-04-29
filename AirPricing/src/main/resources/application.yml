@@ -1,15 +1,27 @@
 spring:
   application:
     name: airpricing-ws
+  security:
+    oauth2:
+      client:
+        registration:
+          amadeus:
+            provider: amadeus
+            authorization-grant-type: client_credentials
+            client-id: SvbnHJwcAhu5TqdKGF4DdBF007M9COZt
+            client-secret: vAXMUSAxQ2DZZIq7
+        provider:
+          amadeus:
+            token-uri: https://test.api.amadeus.com/v1/security/oauth2/token
 
 api:
   amadeus:
     base-url: test.api.amadeus.com/v2
     endpoint-flight-offers: /shopping/flight-offers
-    authorization-grant-type: client_credentials
-    client-id: SvbnHJwcAhu5TqdKGF4DdBF007M9COZt
-    client-secret: vAXMUSAxQ2DZZIq7
-    token-uri: https://test.api.amadeus.com/v1/security/oauth2/token
+
+application:
+  configuration:
+    webflux-buffer-size: 16777216
 
 server:
   port: 8095
