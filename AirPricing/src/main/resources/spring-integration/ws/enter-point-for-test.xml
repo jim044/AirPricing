@@ -11,10 +11,9 @@
 	<int:channel id="enterPointChannel"/>
 
 	<int-http:inbound-gateway
-			request-channel="enterPointChannel"
+			request-channel="requestTokenAmadeusChannel"
 			path="/test"
-			supported-methods="GET"
-			reply-channel="requestTokenAmadeusChannel"/>
+			supported-methods="GET"/>
 
 
 

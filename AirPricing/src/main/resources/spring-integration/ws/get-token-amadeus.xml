@@ -11,17 +11,17 @@
 	<int:channel id="requestTokenAmadeusChannel"/>
 
 
-	<int:chain input-channel="requestTokenAmadeusChannel">
+	<int:chain input-channel="requestTokenAmadeusChannel" output-channel="nullChannel">
 
 		<int:header-enricher>
-			<int:header name="urlFlightSearch" expression="'${application.amadeus.endpoint-flight-offers}'"/>
+			<int:header name="urlFlightSearch" expression="'${application.amadeus.base-path}' + '${application.amadeus.endpoint-flight-offers}'"/>
 		</int:header-enricher>
 
 		<int:transformer ref="transformerTest"/>
 
-		<int-webflux:outbound-gateway id="requestTokenAmadeus"
+		<int-webflux:outbound-channel-adapter id="requestTokenAmadeus"
 											  web-client="amadeusWebClient"
-											  url-expression="'${application.amadeus.endpoint-flight-offers}'"
+											  url-expression="'${application.amadeus.base-path}' + '${application.amadeus.endpoint-flight-offers}'"
 											  http-method="GET"
 											  charset="UTF-8"
 											  expected-response-type="java.lang.String"/>
