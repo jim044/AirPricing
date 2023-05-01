@@ -17,14 +17,18 @@
 			<int:header name="urlFlightSearch" expression="'${application.amadeus.base-path}' + '${application.amadeus.endpoint-flight-offers}'"/>
 		</int:header-enricher>
 
-		<int:transformer ref="transformerTest"/>
+		<int:transformer ref="flightOffersTransformer"/>
+
+		<int:object-to-json-transformer />
 
 		<int-webflux:outbound-channel-adapter id="requestTokenAmadeus"
 											  web-client="amadeusWebClient"
-											  url-expression="'${application.amadeus.base-path}' + '${application.amadeus.endpoint-flight-offers}'"
-											  http-method="GET"
+											  url-expression="'${application.amadeus.endpoint-flight-offers}'"
+											  http-method="POST"
 											  charset="UTF-8"
 											  expected-response-type="java.lang.String"/>
+
+		<int:transformer ref="transformerTest"/>
 	</int:chain>
 
 

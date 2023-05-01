@@ -8,8 +8,8 @@ spring:
           amadeus:
             provider: amadeus
             authorization-grant-type: client_credentials
-            client-id: ULQPIaTKiZk7V3LD6yY0RZ0oQtXAmejm
-            client-secret: KWNFHTlCGHdsdo9E
+            client-id: guQnYdXyNhfG9GGNPz80Ug8oooETchgw
+            client-secret: iRse7SnRY4eR8qPf
         provider:
           amadeus:
             token-uri: https://test.api.amadeus.com/v1/security/oauth2/token
@@ -19,7 +19,7 @@ application:
   configuration:
     webflux-buffer-size: 16777216
   amadeus:
-    base-path: test.api.amadeus.com/v2
+    base-path: https://test.api.amadeus.com/v2
     endpoint-flight-offers: /shopping/flight-offers
 
 
