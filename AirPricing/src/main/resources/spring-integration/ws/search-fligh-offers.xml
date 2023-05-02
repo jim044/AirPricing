@@ -10,23 +10,23 @@
 
 	<int:channel id="requestTokenAmadeusChannel"/>
 
+	<int:inbound-channel-adapter channel="requestTokenAmadeusChannel" expression="'getRequests'">
+		<int:poller fixed-rate="10000"/>
+	</int:inbound-channel-adapter>
 
 	<int:chain input-channel="requestTokenAmadeusChannel" output-channel="nullChannel">
-
-		<int:header-enricher>
-			<int:header name="urlFlightSearch" expression="'${application.amadeus.base-path}' + '${application.amadeus.endpoint-flight-offers}'"/>
-		</int:header-enricher>
 
 		<int:transformer ref="flightOffersTransformer"/>
 
 		<int:object-to-json-transformer />
 
-		<int-webflux:outbound-channel-adapter id="requestTokenAmadeus"
+		<int-webflux:outbound-gateway id="requestTokenAmadeus"
 											  web-client="amadeusWebClient"
-											  url-expression="'${application.amadeus.endpoint-flight-offers}'"
+											  url-expression="'${application.amadeus.base-path}' + '${application.amadeus.endpoint-flight-offers}'"
 											  http-method="POST"
-											  charset="UTF-8"
-											  expected-response-type="java.lang.String"/>
+									  charset="UTF-8"
+									  expected-response-type="java.lang.String">
+		</int-webflux:outbound-gateway>
 
 		<int:transformer ref="transformerTest"/>
 	</int:chain>

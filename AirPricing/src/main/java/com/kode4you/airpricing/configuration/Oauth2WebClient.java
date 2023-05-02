@@ -1,34 +1,14 @@
 package com.kode4you.airpricing.configuration;
 
-import io.netty.channel.ChannelOption;
-import io.netty.handler.logging.LogLevel;
-import io.netty.handler.ssl.SslContext;
-import io.netty.handler.ssl.SslContextBuilder;
-import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
-import org.springframework.http.client.reactive.ReactorClientHttpConnector;
-import org.springframework.security.oauth2.client.AuthorizedClientServiceOAuth2AuthorizedClientManager;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClientProvider;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClientProviderBuilder;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
+import org.springframework.security.oauth2.client.*;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.web.DefaultOAuth2AuthorizedClientManager;
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizedClientRepository;
 import org.springframework.security.oauth2.client.web.reactive.function.client.ServletOAuth2AuthorizedClientExchangeFilterFunction;
-import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.netty.http.client.HttpClient;
-import reactor.netty.resources.ConnectionProvider;
-import reactor.netty.transport.logging.AdvancedByteBufFormat;
-
-import javax.net.ssl.SSLException;
-import java.time.Duration;
-import java.time.temporal.ChronoUnit;
 
 @Configuration
 public class Oauth2WebClient {
@@ -38,17 +18,14 @@ public class Oauth2WebClient {
     @Value("${application.configuration.webflux-buffer-size}")
     int webClientBufferSize;
 
-    @Autowired
-    private Environment env;
-
-    @Bean
+/*    @Bean
     public OAuth2AuthorizedClientManager authorizedClientManager(
             ClientRegistrationRepository clientRegistrationRepository,
             OAuth2AuthorizedClientRepository authorizedClientRepository) {
 
         OAuth2AuthorizedClientProvider authorizedClientProvider = OAuth2AuthorizedClientProviderBuilder.builder()
-                .refreshToken()
                 .clientCredentials()
+                .refreshToken()
                 .build();
 
         DefaultOAuth2AuthorizedClientManager authorizedClientManager = new DefaultOAuth2AuthorizedClientManager(
@@ -56,38 +33,35 @@ public class Oauth2WebClient {
         authorizedClientManager.setAuthorizedClientProvider(authorizedClientProvider);
 
         return authorizedClientManager;
+    }*/
+
+    @Bean
+    public OAuth2AuthorizedClientManager authorizedClientManager(
+            ClientRegistrationRepository clientRegistrationRepository,
+            OAuth2AuthorizedClientService authorizedClientService) {
+        OAuth2AuthorizedClientProvider authorizedClientProvider =
+                OAuth2AuthorizedClientProviderBuilder.builder()
+                        .clientCredentials()
+                        .refreshToken()
+                        .build();
+
+        // Using AuthorizedClientServiceOAuth2AuthorizedClientManager instead of the DefaultOAuth2AuthorizedClientManager
+        // to support asynchrone execution through the @Async annotation
+        AuthorizedClientServiceOAuth2AuthorizedClientManager authorizedClientManager =
+                new AuthorizedClientServiceOAuth2AuthorizedClientManager(clientRegistrationRepository, authorizedClientService);
+        authorizedClientManager.setAuthorizedClientProvider(authorizedClientProvider);
+
+        return authorizedClientManager;
     }
 
     @Bean
-    public WebClient amadeusWebClient(OAuth2AuthorizedClientManager authorizedClientManager) throws SSLException {
-        // May use a ServerAuth2AuthorizedClientExchangeFilterFunction in a reactive stack
-        SslContext sslContext = SslContextBuilder
-                .forClient()
-                .trustManager(InsecureTrustManagerFactory.INSTANCE)
-                .build();
-
-        ConnectionProvider connectionProvider = ConnectionProvider.builder("connectionProvider")
-                .maxIdleTime(Duration.ofSeconds(10))
-                .build();
-
-        HttpClient httpConnector = HttpClient.create(connectionProvider)
-                .secure(t -> t.sslContext(sslContext) )
-                .wiretap("reactor.netty.http.client.HttpClient", LogLevel.DEBUG, AdvancedByteBufFormat.TEXTUAL)
-                .responseTimeout(Duration.of(5, ChronoUnit.SECONDS));
-
-
+    public WebClient amadeusWebClient(OAuth2AuthorizedClientManager authorizedClientManager) {
         ServletOAuth2AuthorizedClientExchangeFilterFunction oauth2Client =
                 new ServletOAuth2AuthorizedClientExchangeFilterFunction(authorizedClientManager);
         oauth2Client.setDefaultClientRegistrationId(AMADEUS_CLIENT_NAME);
+        oauth2Client.setDefaultOAuth2AuthorizedClient(true);
         return WebClient.builder()
-                .clientConnector(new ReactorClientHttpConnector(httpConnector))
-                .exchangeStrategies(ExchangeStrategies.builder().codecs(configurer -> configurer
-                                .defaultCodecs()
-                                .maxInMemorySize(webClientBufferSize))
-                        .build())
-                .baseUrl(env.getProperty("application.amadeus.base-path"))
                 .apply(oauth2Client.oauth2Configuration())
                 .build();
     }
-
 }

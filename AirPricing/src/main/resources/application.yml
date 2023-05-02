@@ -8,8 +8,8 @@ spring:
           amadeus:
             provider: amadeus
             authorization-grant-type: client_credentials
-            client-id: guQnYdXyNhfG9GGNPz80Ug8oooETchgw
-            client-secret: iRse7SnRY4eR8qPf
+            client-id: I0O97n5o8YYGAtknZNJT5owhKAKe8dC5
+            client-secret: cTFPrvVy5Tq9qgfX
         provider:
           amadeus:
             token-uri: https://test.api.amadeus.com/v1/security/oauth2/token
