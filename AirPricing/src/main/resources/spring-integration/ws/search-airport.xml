@@ -8,20 +8,21 @@
 		http://www.springframework.org/schema/integration/webflux
     	https://www.springframework.org/schema/integration/webflux/spring-integration-webflux.xsd">
 
-	<int:channel id="searchFlightOffersChannel"/>
+	<int:channel id="searchAirportChannel"/>
 
-	<int:chain input-channel="searchFlightOffersChannel" output-channel="nullChannel">
+	<int:inbound-channel-adapter channel="searchAirportChannel" expression="'getRequests'">
+		<int:poller fixed-rate="10000"/>
+	</int:inbound-channel-adapter>
 
-		<int:transformer ref="flightOffersTransformer"/>
-
-		<int:object-to-json-transformer />
+	<int:chain input-channel="searchAirportChannel" output-channel="nullChannel">
 
 		<int-webflux:outbound-gateway id="requestTokenAmadeus"
-											  web-client="amadeusWebClient"
-											  url-expression="'${application.amadeus.base-path-v2}' + '${application.amadeus.endpoint-flight-offers}'"
-											  http-method="POST"
+									  uri-variables-expression=""
+									  web-client="amadeusWebClient"
+									  url-expression="'${application.amadeus.base-path-v1}' + '${application.amadeus.endpoint-airport}' + '?subType=AIRPORT&amp;keyword=MUC&amp;page[limit]=10&amp;page[offset]=0&amp;sort=analytics.travelers.score&amp;view=FULL'"
+									  http-method="GET"
 									  charset="UTF-8"
-									  expected-response-type="com.kode4you.airpricing.domain.response.flightOffers.FlightOffersResponse">
+									  expected-response-type="java.lang.String">
 		</int-webflux:outbound-gateway>
 
 		<int:transformer ref="transformerTest"/>

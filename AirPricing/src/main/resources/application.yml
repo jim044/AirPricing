@@ -19,8 +19,10 @@ application:
   configuration:
     webflux-buffer-size: 16777216
   amadeus:
-    base-path: https://test.api.amadeus.com/v2
+    base-path-v1: https://test.api.amadeus.com/v1
+    base-path-v2: https://test.api.amadeus.com/v2
     endpoint-flight-offers: /shopping/flight-offers
+    endpoint-airport: /reference-data/locations
 
 
 server:
