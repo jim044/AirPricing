@@ -22,7 +22,7 @@
 									  url-expression="'${application.amadeus.base-path-v1}' + '${application.amadeus.endpoint-airport}' + '?subType=AIRPORT&amp;keyword=MUC&amp;page[limit]=10&amp;page[offset]=0&amp;sort=analytics.travelers.score&amp;view=FULL'"
 									  http-method="GET"
 									  charset="UTF-8"
-									  expected-response-type="java.lang.String">
+									  expected-response-type="com.kode4you.airpricing.domain.response.airporrtSearch.AirportSearchResponse">
 		</int-webflux:outbound-gateway>
 
 		<int:transformer ref="transformerTest"/>

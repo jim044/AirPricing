@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Data
-public class DataResponse {
+public class DataFlightOffersResponse {
     private String type;
     private String id;
     private String source;
