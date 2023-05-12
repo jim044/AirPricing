@@ -3,16 +3,36 @@
 	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	   xmlns:int="http://www.springframework.org/schema/integration"
 	   xmlns:int-webflux="http://www.springframework.org/schema/integration/webflux"
+	   xmlns:int-http="http://www.springframework.org/schema/integration/http"
 	   xsi:schemaLocation="http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/integration/webflux
-    	https://www.springframework.org/schema/integration/webflux/spring-integration-webflux.xsd">
+        https://www.springframework.org/schema/integration/webflux/spring-integration-webflux.xsd
+		http://www.springframework.org/schema/integration/http http://www.springframework.org/schema/integration/http/spring-integration-http.xsd">
 
 	<int:channel id="searchAirportChannel"/>
+	<int:channel id="errorChannelInvoiceWs" />
+	<int:channel id="invoiceWsRequestChannel" />
+	<int:channel id="invoiceWsResponseChannel" />
 
-	<int:inbound-channel-adapter channel="searchAirportChannel" expression="'getRequests'">
-		<int:poller fixed-rate="10000"/>
-	</int:inbound-channel-adapter>
+	<int-http:inbound-gateway
+			id="webserviceGetInvoiceFile"
+			request-channel="searchAirportChannel"
+			reply-channel="invoiceWsResponseChannel"
+			reply-timeout="30000"
+			path="/api/searchAirport/{searchChar}"
+			supported-methods="GET"
+			error-channel="errorChannelInvoiceWs"
+	>
+		<int-http:header name="searchChar" expression="#pathVariables.searchChar"/>
+	</int-http:inbound-gateway>
+
+	<int:chain id="errorInvoiceWs" input-channel="errorChannelInvoiceWs" output-channel="invoiceWsResponseChannel">
+		<int:transformer expression="'No reply produced for request'"></int:transformer>
+		<int:header-enricher >
+			<int:header name="http_statusCode" value="404"></int:header>
+		</int:header-enricher>
+	</int:chain>
 
 	<int:chain input-channel="searchAirportChannel" output-channel="nullChannel">
 
@@ -27,6 +47,4 @@
 
 		<int:transformer ref="transformerTest"/>
 	</int:chain>
-
-
 </beans>
