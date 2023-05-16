@@ -5,7 +5,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.client.*;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.registration.ReactiveClientRegistrationRepository;
+import org.springframework.security.oauth2.client.web.DefaultReactiveOAuth2AuthorizedClientManager;
+import org.springframework.security.oauth2.client.web.reactive.function.client.ServerOAuth2AuthorizedClientExchangeFilterFunction;
 import org.springframework.security.oauth2.client.web.reactive.function.client.ServletOAuth2AuthorizedClientExchangeFilterFunction;
+import org.springframework.security.oauth2.client.web.server.ServerOAuth2AuthorizedClientRepository;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Configuration
@@ -17,32 +21,33 @@ public class Oauth2WebClient {
     int webClientBufferSize;
 
     @Bean
-    public OAuth2AuthorizedClientManager authorizedClientManager(
-            ClientRegistrationRepository clientRegistrationRepository,
-            OAuth2AuthorizedClientService authorizedClientService) {
-        OAuth2AuthorizedClientProvider authorizedClientProvider =
-                OAuth2AuthorizedClientProviderBuilder.builder()
-                        .clientCredentials()
+    public ReactiveOAuth2AuthorizedClientManager authorizedClientManager(
+            ReactiveClientRegistrationRepository clientRegistrationRepository,
+            ServerOAuth2AuthorizedClientRepository authorizedClientRepository) {
+
+        ReactiveOAuth2AuthorizedClientProvider authorizedClientProvider =
+                ReactiveOAuth2AuthorizedClientProviderBuilder.builder()
                         .refreshToken()
+                        .clientCredentials()
                         .build();
 
-        // Using AuthorizedClientServiceOAuth2AuthorizedClientManager instead of the DefaultOAuth2AuthorizedClientManager
-        // to support asynchrone execution through the @Async annotation
-        AuthorizedClientServiceOAuth2AuthorizedClientManager authorizedClientManager =
-                new AuthorizedClientServiceOAuth2AuthorizedClientManager(clientRegistrationRepository, authorizedClientService);
+        DefaultReactiveOAuth2AuthorizedClientManager authorizedClientManager =
+                new DefaultReactiveOAuth2AuthorizedClientManager(
+                        clientRegistrationRepository, authorizedClientRepository);
         authorizedClientManager.setAuthorizedClientProvider(authorizedClientProvider);
 
         return authorizedClientManager;
     }
 
     @Bean
-    public WebClient amadeusWebClient(OAuth2AuthorizedClientManager authorizedClientManager) {
-        ServletOAuth2AuthorizedClientExchangeFilterFunction oauth2Client =
-                new ServletOAuth2AuthorizedClientExchangeFilterFunction(authorizedClientManager);
+    public WebClient amadeusWebClient(ReactiveOAuth2AuthorizedClientManager authorizedClientManager) {
+        ServerOAuth2AuthorizedClientExchangeFilterFunction oauth2Client =
+                new ServerOAuth2AuthorizedClientExchangeFilterFunction(authorizedClientManager);
+
         oauth2Client.setDefaultClientRegistrationId(AMADEUS_CLIENT_NAME);
         oauth2Client.setDefaultOAuth2AuthorizedClient(true);
         return WebClient.builder()
-                .apply(oauth2Client.oauth2Configuration())
+                .filter(oauth2Client)
                 .build();
     }
 }

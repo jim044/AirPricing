@@ -33,15 +33,18 @@
         <scope>import</scope>
         <type>pom</type>
       </dependency>
+      <dependency>
+        <groupId>io.projectreactor</groupId>
+        <artifactId>reactor-bom</artifactId>
+        <version>2022.0.7</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
   <dependencies>
     <!-- Spring Boot -->
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-web</artifactId>
-    </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-oauth2-client</artifactId>
@@ -59,10 +62,6 @@
       <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-web</artifactId>
-    </dependency>
 
     <!-- Spring Integration -->
     <dependency>
@@ -74,7 +73,6 @@
       <artifactId>spring-integration-http</artifactId>
     </dependency>
 
-
     <!-- TEST -->
     <dependency>
       <groupId>junit</groupId>
@@ -82,15 +80,15 @@
       <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
+
+    <!-- Netty -->
     <dependency>
-      <groupId>io.netty</groupId>
-      <artifactId>netty-handler</artifactId>
-      <version>4.1.84.Final</version>
+      <groupId>io.projectreactor.netty</groupId>
+      <artifactId>reactor-netty-core</artifactId>
     </dependency>
     <dependency>
       <groupId>io.projectreactor.netty</groupId>
       <artifactId>reactor-netty-http</artifactId>
-      <version>1.0.7</version>
     </dependency>
 
     <!-- Lombok -->

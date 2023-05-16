@@ -7,25 +7,15 @@
 	   xsi:schemaLocation="http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/integration/webflux
-        https://www.springframework.org/schema/integration/webflux/spring-integration-webflux.xsd
-		http://www.springframework.org/schema/integration/http http://www.springframework.org/schema/integration/http/spring-integration-http.xsd">
-
+        https://www.springframework.org/schema/integration/webflux/spring-integration-webflux.xsd">
 	<int:channel id="searchAirportChannel"/>
 	<int:channel id="errorChannelInvoiceWs" />
 	<int:channel id="invoiceWsRequestChannel" />
 	<int:channel id="invoiceWsResponseChannel" />
 
-	<int-http:inbound-gateway
-			id="webserviceGetInvoiceFile"
-			request-channel="searchAirportChannel"
-			reply-channel="invoiceWsResponseChannel"
-			reply-timeout="30000"
-			path="/api/searchAirport/{searchChar}"
-			supported-methods="GET"
-			error-channel="errorChannelInvoiceWs"
-	>
-		<int-http:header name="searchChar" expression="#pathVariables.searchChar"/>
-	</int-http:inbound-gateway>
+	<int-webflux:inbound-gateway request-channel="searchAirportChannel" path="/api/searchAirport">
+		<int-webflux:request-mapping produces="application/json"/>
+	</int-webflux:inbound-gateway>
 
 	<int:chain id="errorInvoiceWs" input-channel="errorChannelInvoiceWs" output-channel="invoiceWsResponseChannel">
 		<int:transformer expression="'No reply produced for request'"></int:transformer>
