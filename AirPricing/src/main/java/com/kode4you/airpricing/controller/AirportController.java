@@ -13,7 +13,7 @@ public class AirportController {
     private ApiService apiService;
 
     @GetMapping(value = "/searchAirport/{airport}", produces = "application/json")
-    public @ResponseBody AirportSearchResponse getBook(@PathVariable String airport) {
+    public @ResponseBody String getBook(@PathVariable String airport) {
         return apiService.searchAirport();
     }
 }

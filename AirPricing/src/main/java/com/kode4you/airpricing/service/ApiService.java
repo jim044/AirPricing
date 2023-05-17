@@ -1,25 +1,15 @@
 package com.kode4you.airpricing.service;
 
-import com.kode4you.airpricing.domain.response.airporrtSearch.AirportSearchResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.RequestEntity;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.oauth2.client.OAuth2RestTemplate;
-import org.springframework.security.oauth2.core.OAuth2Token;
-import org.springframework.stereotype.Service;
-import org.springframework.util.MultiValueMap;
+import org.springframework.http.*;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
 import java.util.Base64;
 
-@Service
+@Component
 public class ApiService {
-
-    @Autowired
-    OAuth2RestTemplate oauth2RestTemplate;
 
     @Value("${application.amadeus.base-path-v1}")
     private String basePathV1;
@@ -30,10 +20,29 @@ public class ApiService {
     @Value("${application.amadeus.endpoint-airport}")
     private String endpointAirport;
 
-    public AirportSearchResponse searchAirport(){
-        String url = basePathV1 + endpointAirport + "?subType=AIRPORT&keyword=MUC&page%5Blimit%5D=10&page%5Boffset%5D=0&sort=analytics.travelers.score&view=FULL";
-        AirportSearchResponse airportSearchResponse = oauth2RestTemplate.getForObject("https://test.api.amadeus.com/v1/reference-data/locations?subType=AIRPORT&keyword=MUC&page%5Blimit%5D=10&page%5Boffset%5D=0&sort=analytics.travelers.score&view=FULL", AirportSearchResponse.class);
-
-        return airportSearchResponse;
+    public static final String AUTHORIZATION = "Authorization";
+    private final TokenManager tokenManager;
+    private final RestTemplate restTemplate;
+    public ApiService(
+            TokenManager tokenManager,
+            RestTemplate restTemplate) {
+        this.tokenManager = tokenManager;
+        this.restTemplate = restTemplate;
     }
+
+    public String searchAirport(){
+        String token = tokenManager.getAccessToken();
+
+        String url = basePathV1 + endpointAirport + "?subType=AIRPORT&keyword=MUC&page%5Blimit%5D=10&page%5Boffset%5D=0&sort=analytics.travelers.score&view=FULL";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(AUTHORIZATION, "Bearer " + token);
+        HttpEntity<String> request = new HttpEntity<>(null, headers);
+
+        ResponseEntity<String> response =
+                restTemplate.exchange(url, HttpMethod.GET, request, String.class);
+
+        return response.getBody();
+    }
+
 }
