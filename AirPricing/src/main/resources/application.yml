@@ -13,7 +13,9 @@ spring:
         provider:
           amadeus:
             token-uri: https://test.api.amadeus.com/v1/security/oauth2/token
-
+  mvc:
+    converters:
+      preferred-json: gson
 
 application:
   configuration:
@@ -23,6 +25,7 @@ application:
     base-path-v2: https://test.api.amadeus.com/v2
     endpoint-flight-offers: /shopping/flight-offers
     endpoint-airport: /reference-data/locations
+
 
 
 server:

@@ -3,8 +3,9 @@ package com.kode4you.airpricing;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 
-@SpringBootApplication
+@SpringBootApplication(exclude = { JacksonAutoConfiguration.class })
 public class Application
 {
     public static void main(String[] args) {
