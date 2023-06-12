@@ -1,0 +1,416 @@
+databaseChangeLog:
+  - changeSet:
+      preConditions:
+        - onFail: MARK_RAN
+        - sqlCheck:
+            expectedResult: 0
+            sql: SELECT COUNT(*) from pg_catalog.pg_namespace where nspname = 'airpricing_schema'
+      id: create-schema_airpricing_schema
+      author: Jimmy
+      changes:
+        - sql:
+            comment: Ajout des droits de la BDD
+            endDelimiter: ;
+            sql: GRANT ALL PRIVILEGES ON DATABASE airpricing TO james
+        - sql:
+            comment: Creation du schema
+            sql: CREATE SCHEMA airpricing_schema
+        - sql:
+            comment: Grant config du schema
+            sql: GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA airpricing_schema TO james
+  - changeSet:
+      id: create_table_luggage_category
+      author: Jimmy
+      preConditions:
+        - onFail: MARK_RAN
+          not:
+            tableExists:
+              tableName: luggage_category
+              schemaName: airpricing_schema
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: luggage_category_id_pkey
+                  name: id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: category_name
+                  type: VARCHAR(250)
+            tableName: luggage_category
+            schemaName: airpricing_schema
+  - changeSet:
+      id: createIndex_luggage_category
+      author: Jimmy
+      changes:
+        - createIndex:
+            clustered: true
+            columns:
+              - column:
+                  name: id
+            indexName: index_luggage_category
+            schemaName: airpricing_schema
+            tableName: luggage_category
+  - changeSet:
+      id: create_table_passenger_category
+      author: Jimmy
+      preConditions:
+        - onFail: MARK_RAN
+          not:
+            tableExists:
+              tableName: passenger_category
+              schemaName: airpricing_schema
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: passenger_category_id_pkey
+                  name: id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: category_name
+                  type: VARCHAR(250)
+            tableName: passenger_category
+            schemaName: airpricing_schema
+  - changeSet:
+      id: createIndex_passenger_category
+      author: Jimmy
+      changes:
+        - createIndex:
+            clustered: true
+            columns:
+              - column:
+                  name: id
+            indexName: index_passenger_category
+            schemaName: airpricing_schema
+            tableName: passenger_category
+  - changeSet:
+      id: create_table_seat_category
+      author: Jimmy
+      preConditions:
+        - onFail: MARK_RAN
+          not:
+            tableExists:
+              tableName: seat_category
+              schemaName: airpricing_schema
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: seat_category_id_pkey
+                  name: id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: category_name
+                  type: VARCHAR(250)
+            tableName: seat_category
+            schemaName: airpricing_schema
+  - changeSet:
+      id: createIndex_seat_category
+      author: Jimmy
+      changes:
+        - createIndex:
+            clustered: true
+            columns:
+              - column:
+                  name: id
+            indexName: index_seat_category
+            schemaName: airpricing_schema
+            tableName: seat_category
+  - changeSet:
+      id: create_table_flight_category
+      author: Jimmy
+      preConditions:
+        - onFail: MARK_RAN
+          not:
+            tableExists:
+              tableName: flight_category
+              schemaName: airpricing_schema
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: flight_category_id_pkey
+                  name: id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: category_name
+                  type: VARCHAR(250)
+            tableName: flight_category
+            schemaName: airpricing_schema
+  - changeSet:
+      id: createIndex_flight_category
+      author: Jimmy
+      changes:
+        - createIndex:
+            clustered: true
+            columns:
+              - column:
+                  name: id
+            indexName: index_flight_category
+            schemaName: airpricing_schema
+            tableName: flight_category
+  - changeSet:
+      id: create_table_airport
+      author: Jimmy
+      preConditions:
+        - onFail: MARK_RAN
+          not:
+            tableExists:
+              tableName: airport
+              schemaName: airpricing_schema
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: airport_id_pkey
+                  name: id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: name
+                  type: VARCHAR(250)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: address
+                  type: VARCHAR(250)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: city
+                  type: VARCHAR(250)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: postal_code
+                  type: VARCHAR(250)
+            tableName: airport
+            schemaName: airpricing_schema
+  - changeSet:
+      id: createIndex_airport
+      author: Jimmy
+      changes:
+        - createIndex:
+            clustered: true
+            columns:
+              - column:
+                  name: id
+            indexName: index_airport
+            schemaName: airpricing_schema
+            tableName: airport
+  - changeSet:
+      id: create_table_alert_search_flight
+      author: Jimmy
+      preConditions:
+        - onFail: MARK_RAN
+          not:
+            tableExists:
+              tableName: alert_search_flight
+              schemaName: airpricing_schema
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: alert_search_flight_id_pkey
+                  name: id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: id_airport_departure
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: id_airport_arrival
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: datetime_departure
+                  type: TIMESTAMP WITH TIMEZONE
+              - column:
+                  constraints:
+                    nullable: true
+                  name: datetime_arrival
+                  type: TIMESTAMP WITH TIMEZONE
+              - column:
+                  constraints:
+                    nullable: true
+                  name: id_luggage_category
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: true
+                  name: id_passenger_category
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: true
+                  name: id_seat_category
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: true
+                  name: id_flight_category
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: true
+                  name: max_price
+                  type: FLOAT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: search_start_datetime
+                  type: TIMESTAMP WITH TIMEZONE
+              - column:
+                  constraints:
+                    nullable: false
+                  name: search_end_datetime
+                  type: TIMESTAMP WITH TIMEZONE
+            tableName: alert_search_flight
+            schemaName: airpricing_schema
+  - changeSet:
+      id: createIndex_alert_search_flight
+      author: Jimmy
+      changes:
+        - createIndex:
+            clustered: true
+            columns:
+              - column:
+                  name: id
+            indexName: index_alert_search_flight
+            schemaName: airpricing_schema
+            tableName: alert_search_flight
+  - changeSet:
+      id: create_foreign_key_alert_search_flight_id_airport_departure
+      author: Jimmy
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: id_airport_departure
+            baseTableName: alert_search_flight
+            baseTableSchemaName: airpricing_schema
+            constraintName: fk_alert_search_flight_id_airport_departure
+            deferrable: true
+            initiallyDeferred: true
+            onDelete: CASCADE
+            onUpdate: CASCADE
+            referencedColumnNames: id
+            referencedTableName: airport
+            referencedTableSchemaName: airpricing_schema
+            validate: true
+  - changeSet:
+      id: create_foreign_key_alert_search_flight_id_airport_arrival
+      author: Jimmy
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: id_airport_arrival
+            baseTableName: alert_search_flight
+            baseTableSchemaName: airpricing_schema
+            constraintName: fk_alert_search_flight_id_airport_arrival
+            deferrable: true
+            initiallyDeferred: true
+            onDelete: CASCADE
+            onUpdate: CASCADE
+            referencedColumnNames: id
+            referencedTableName: airport
+            referencedTableSchemaName: airpricing_schema
+            validate: true
+  - changeSet:
+      id: create_foreign_key_alert_search_flight_id_luggage_category
+      author: Jimmy
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: id_luggage_category
+            baseTableName: alert_search_flight
+            baseTableSchemaName: airpricing_schema
+            constraintName: fk_alert_search_flight_id_luggage_category
+            deferrable: true
+            initiallyDeferred: true
+            onDelete: CASCADE
+            onUpdate: CASCADE
+            referencedColumnNames: id
+            referencedTableName: luggage_category
+            referencedTableSchemaName: airpricing_schema
+            validate: true
+  - changeSet:
+      id: create_foreign_key_alert_search_flight_id_passenger_category
+      author: Jimmy
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: id_passenger_category
+            baseTableName: alert_search_flight
+            baseTableSchemaName: airpricing_schema
+            constraintName: fk_alert_search_flight_id_passenger_category
+            deferrable: true
+            initiallyDeferred: true
+            onDelete: CASCADE
+            onUpdate: CASCADE
+            referencedColumnNames: id
+            referencedTableName: passenger_category
+            referencedTableSchemaName: airpricing_schema
+            validate: true
+  - changeSet:
+      id: create_foreign_key_alert_search_flight_id_seat_category
+      author: Jimmy
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: id_seat_category
+            baseTableName: alert_search_flight
+            baseTableSchemaName: airpricing_schema
+            constraintName: fk_alert_search_flight_id_seat_category
+            deferrable: true
+            initiallyDeferred: true
+            onDelete: CASCADE
+            onUpdate: CASCADE
+            referencedColumnNames: id
+            referencedTableName: seat_category
+            referencedTableSchemaName: airpricing_schema
+            validate: true
+  - changeSet:
+      id: create_foreign_key_alert_search_flight_id_flight_category
+      author: Jimmy
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: id_flight_category
+            baseTableName: alert_search_flight
+            baseTableSchemaName: airpricing_schema
+            constraintName: fk_alert_search_flight_id_flight_category
+            deferrable: true
+            initiallyDeferred: true
+            onDelete: CASCADE
+            onUpdate: CASCADE
+            referencedColumnNames: id
+            referencedTableName: flight_category
+            referencedTableSchemaName: airpricing_schema
+            validate: true

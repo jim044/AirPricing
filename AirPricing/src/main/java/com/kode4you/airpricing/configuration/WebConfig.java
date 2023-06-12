@@ -14,7 +14,7 @@ public class WebConfig {
         http.csrf().disable();
 
         http
-                .authorizeHttpRequests((authorize) -> authorize
+                .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/**").permitAll()
                 );
 
