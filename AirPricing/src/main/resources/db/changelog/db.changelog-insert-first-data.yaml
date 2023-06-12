@@ -1,0 +1,117 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert_passenger_category
+      author: Jimmy
+      changes:
+        - insert:
+            tableName: passenger_category
+            schemaName: airpricing_schema
+            columns:
+              - column:
+                  name: id
+                  value: 1
+              - column:
+                  name: category_name
+                  value: "Adultes"
+        - insert:
+            tableName: passenger_category
+            schemaName: airpricing_schema
+            columns:
+              - column:
+                  name: id
+                  value: 2
+              - column:
+                  name: category_name
+                  value: "Jeunes"
+        - insert:
+            tableName: passenger_category
+            schemaName: airpricing_schema
+            columns:
+              - column:
+                  name: id
+                  value: 3
+              - column:
+                  name: category_name
+                  value: "Enfants"
+  - changeSet:
+      id: insert_flight_category
+      author: Jimmy
+      changes:
+        - insert:
+            tableName: flight_category
+            schemaName: airpricing_schema
+            columns:
+              - column:
+                  name: id
+                  value: 1
+              - column:
+                  name: category_name
+                  value: "Aller simple"
+        - insert:
+            tableName: flight_category
+            schemaName: airpricing_schema
+            columns:
+              - column:
+                  name: id
+                  value: 2
+              - column:
+                  name: category_name
+                  value: "Aller-retour"
+  - changeSet:
+      id: insert_seat_category
+      author: Jimmy
+      changes:
+        - insert:
+            tableName: seat_category
+            schemaName: airpricing_schema
+            columns:
+              - column:
+                  name: id
+                  value: 1
+              - column:
+                  name: category_name
+                  value: "Économique"
+        - insert:
+            tableName: seat_category
+            schemaName: airpricing_schema
+            columns:
+              - column:
+                  name: id
+                  value: 2
+              - column:
+                  name: category_name
+                  value: "Affaire"
+        - insert:
+            tableName: seat_category
+            schemaName: airpricing_schema
+            columns:
+              - column:
+                  name: id
+                  value: 3
+              - column:
+                  name: category_name
+                  value: "Première"
+  - changeSet:
+      id: insert_luggage_category
+      author: Jimmy
+      changes:
+        - insert:
+            tableName: luggage_category
+            schemaName: airpricing_schema
+            columns:
+              - column:
+                  name: id
+                  value: 1
+              - column:
+                  name: category_name
+                  value: "Bagage à main"
+        - insert:
+            tableName: luggage_category
+            schemaName: airpricing_schema
+            columns:
+              - column:
+                  name: id
+                  value: 2
+              - column:
+                  name: category_name
+                  value: "Bagage en soute"
